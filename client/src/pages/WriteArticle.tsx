@@ -40,9 +40,8 @@ const WriteArticle = () => {
              className={`text-xs px-4 py-1 border rounded-full cursor-pointer ${selectedLength.text === item.text ? 'bg-blue-50 text-blue-700' : 'text-gray-500 bg-gray-200'}`} key={index}>{item.text}</span>
           ))}
         </div>
-        <br />
         <button className='w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#226BFF] to-[#65ADFF] text-white px-4 py-2 mt-6 text-sm rounded-2xl cursor-pointer'>
-          <Edit/>
+          <Edit className='w-5'/>
           Generate Article
         </button>
       </form>
