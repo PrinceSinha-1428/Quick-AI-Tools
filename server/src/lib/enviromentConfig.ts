@@ -1,0 +1,9 @@
+export const PortNumber = process.env.PORT || 4000;
+export const DatabaseUrl = process.env.DATABASE_URL!;
+export const ClerkPublishAbleKey = process.env.CLERK_PUBLISHABLE_KEY!
+export const ClerkSecretKey = process.env.CLERK_SECRET_KEY!
+export const GoogleGemeniApiKey = process.env.GOOGLE_GEMENI_API_KEY!
+export const ClipdropApiKey = process.env.CLIPDROP_API_KEY!;
+export const CloudinaryName = process.env.CLOUDINARY_CLOUD_NAME!;
+export const CloudinaryApiKey = process.env.CLOUDINARY_API_KEY!
+export const CloudinarySecretKey = process.env.CLOUDINARY_SECRET_KEY!
