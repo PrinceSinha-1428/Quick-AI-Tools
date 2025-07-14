@@ -5,16 +5,12 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import Markdown from 'react-markdown';
 
-
-
 interface ArticleLengthOption {
   length: number;
   text: string;
 };
 
-
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL!
-
 
 const WriteArticle = () => {
 
