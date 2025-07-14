@@ -58,7 +58,7 @@ const BlogTitles = () => {
         </div>
         <button className='w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#C341F6] to-[#8337EB] text-white px-4 py-2 mt-6 text-sm rounded-2xl cursor-pointer'>
           {loading ? <span className='size-4 my-1 rounded-full border-2 border-t-transparent animate-spin'/> :  <Hash className='w-5'/>}
-          Generate Title
+          { loading? "Generating Title" : "Generate Title"}
         </button>
       </form>
       {/* right column */}

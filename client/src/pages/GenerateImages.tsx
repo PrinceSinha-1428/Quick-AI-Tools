@@ -1,17 +1,40 @@
+import { useAuth } from '@clerk/clerk-react';
+import axios from 'axios';
 import { Image, Sparkles } from 'lucide-react';
 import React, { useState } from 'react'
+import toast from 'react-hot-toast';
+
+
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL!
+
 
 const GenerateImages = () => {
 
-   const imageStyle = [
-        'Realistic', 'Ghibli Style', 'Anime Style', 'Cartoon Style', 'Fantasy Style', 'Realistic Style', '3D Style', 'Potrait Style'
-      ];
+      const imageStyle = [ 'Realistic', 'Ghibli Style', 'Anime Style', 'Cartoon Style', 'Fantasy Style', 'Realistic Style', '3D Style', 'Potrait Style'];
       const [selectedStyle, setSelectedStyle] = useState<string>('Realistic');
       const [input, setInput] = useState<string>('');
-      const [publish, setPublish] = useState<boolean>(false)
+      const [publish, setPublish] = useState<boolean>(false);
+      const [loading, setLoading] = useState<boolean>(false);
+      const [content, setContent] = useState<string>('');
+      const {getToken} = useAuth();
     
       const onSubmitHandler = async (e:React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
+          try {
+            setLoading(true);
+            const prompt = `Generate image of ${input} in the style ${selectedStyle}`
+           const {data} = await axios.post('/api/ai/generate-image',{prompt, publish},{headers: {Authorization: `Bearer ${await getToken()}`}});
+          if(data.success){
+            toast.success("Image Generated");
+            setContent(data.content);
+          }else{
+            toast.error(data.message)
+          }
+        } catch (error: any) {
+          toast.error(error.message)
+        } finally {
+          setLoading(false)
+        }
       }
   return (
     <div className='h-full overflow-y-scroll p-6 flex items-start flex-wrap gap-4 text-slate-700'>
@@ -40,9 +63,9 @@ const GenerateImages = () => {
           </label>
           <p className='text-sm'>Make this image Public</p>
         </div>
-        <button className='w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#00AD25] to-[#04FF50] text-white px-4 py-2 mt-6 text-sm rounded-2xl cursor-pointer'>
-          <Image className='w-5 '/>
-          Generate Image
+        <button disabled={loading} className='w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#00AD25] to-[#04FF50] text-white px-4 py-2 mt-6 text-sm rounded-2xl cursor-pointer'>
+          {loading ? <span className='size-4 my-1 rounded-full border-2 border-t-transparent animate-spin'/> :  <Image className='w-5'/>}
+         { loading? "Generating Image" : "Generate Image"}
         </button>
       </form>
       {/* right column */}
@@ -51,12 +74,21 @@ const GenerateImages = () => {
             <Image className='size-5 text-[#00AD25]' />
             <h1 className='text-xl font-semibold'>Generated Image</h1>
           </div>
-          <div className='flex-1 flex justify-center items-center'>
+          {
+            !content ? (
+              <div className='flex-1 flex justify-center items-center'>
             <div className='text-sm flex flex-col items-center gap-5 text-gray-400'>
               <Image className='size-9' />
               <p>Describe your image and click " Generate Image " to get started </p>
             </div>
           </div>
+            ) : (
+              <div className='mt-3 h-full'>
+                <img src={content} alt="img generated" className='size-full' />
+              </div>
+            )
+          }
+          
       </div>
     </div>
   )

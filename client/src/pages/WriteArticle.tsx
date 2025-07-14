@@ -36,6 +36,7 @@ const WriteArticle = () => {
           }
         })
         if(data.success){
+          toast.success("Article Generated")
           setContent(data.content)
         }else{
           toast.error(data.message)
@@ -68,7 +69,7 @@ const WriteArticle = () => {
         </div>
         <button disabled={loading} className='w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#226BFF] to-[#65ADFF] text-white px-4 py-2 mt-6 text-sm rounded-2xl cursor-pointer'>
           {loading ? <span className='size-4 my-1 rounded-full border-2 border-t-transparent animate-spin'/> :  <Edit className='w-5'/>}
-          Generate Article
+          { loading? "Generating Article" : "Generate Article"}
         </button>
       </form>
       {/* right column */}
