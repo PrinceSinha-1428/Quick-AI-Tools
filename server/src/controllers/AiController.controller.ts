@@ -145,7 +145,7 @@ export const generateImage = async (req: any,res: Response): Promise<Response<an
 export const removeBackgroundImage = async (req: any,res: Response): Promise<Response<any, Record<string, any>>> => {
     try {
         const { userId } = req.auth();
-        const {image} = req.file;
+        const image = req.file;
         const plan = req.plan;
         if(plan !== 'premium' ){
             return res.status(200).json({
@@ -161,7 +161,7 @@ export const removeBackgroundImage = async (req: any,res: Response): Promise<Res
                 }
             ]
         })
-        await sql`INSERT INTO creations (user_id, prompt, content, type, publish) 
+        await sql`INSERT INTO creations (user_id, prompt, content, type) 
         VALUES (${userId},'Remove Background from the Image', ${secure_url}, 'image')`;
         return res.status(200).json({
             success: true,
@@ -179,7 +179,7 @@ export const removeImageObject = async (req: any,res: Response): Promise<Respons
     try {
         const { userId } = req.auth();
         const { object } = req.body;
-        const {image} = req.file;
+        const image = req.file;
         const plan = req.plan;
         if(plan !== 'premium' ){
             return res.status(200).json({
@@ -192,7 +192,7 @@ export const removeImageObject = async (req: any,res: Response): Promise<Respons
             transformation:[{effect: `gen_remove: ${object}`}],
             resource_type: 'image'
         })
-        await sql`INSERT INTO creations (user_id, prompt, content, type, publish) 
+        await sql`INSERT INTO creations (user_id, prompt, content, type ) 
         VALUES (${userId},${`Removed ${object} from the Image`}, ${imageUrl}, 'image')`;
         return res.status(200).json({
             success: true,
@@ -241,7 +241,7 @@ export const reviewResume = async (req: any,res: Response): Promise<Response<any
             message: "AI response did not return valid content."
         });
     }
-        await sql`INSERT INTO creations (user_id, prompt, content, type, publish) 
+        await sql`INSERT INTO creations (user_id, prompt, content, type) 
         VALUES (${userId},'Review The uploaded Resume', ${content}, 'Review Resume')`;
         return res.status(200).json({
             success: true,
