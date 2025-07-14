@@ -21,12 +21,15 @@
     "express": "^5.1.0",
     "form-data": "^4.0.3",
     "multer": "^2.0.1",
-    "openai": "^5.9.0"
+    "openai": "^5.9.0",
+    "pdf-parse": "^1.1.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/multer": "^2.0.0",
     "@types/node": "^24.0.13",
+    "@types/pdf-parse": "^1.1.5",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
