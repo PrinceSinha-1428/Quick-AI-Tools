@@ -1,11 +1,20 @@
+import { useAuth } from '@clerk/clerk-react';
+import axios from 'axios';
 import { Edit, Sparkles } from 'lucide-react'
 import { useState } from 'react';
+import toast from 'react-hot-toast';
+import Markdown from 'react-markdown';
+
 
 
 interface ArticleLengthOption {
   length: number;
   text: string;
 };
+
+
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL!
+
 
 const WriteArticle = () => {
 
@@ -16,9 +25,30 @@ const WriteArticle = () => {
   ];
   const [selectedLength, setSelectedLength] = useState<ArticleLengthOption>(articleLength[0]);
   const [input, setInput] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [content, setContent] = useState<string>('');
+  const {getToken} = useAuth();
 
   const onSubmitHandler = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+      try {
+        setLoading(true);
+        const prompt = `Write an article about ${input} in ${selectedLength.text}`;
+        const {data} = await axios.post('/api/ai/generate-article',{prompt,length: selectedLength.length},{
+          headers: {
+            Authorization: `Bearer ${ await getToken()}`
+          }
+        })
+        if(data.success){
+          setContent(data.content)
+        }else{
+          toast.error(data.message)
+        }
+      } catch (error:any) {
+        toast.error(error.message)
+      } finally {
+        setLoading(false)
+      }
   }
 
   return (
@@ -40,8 +70,8 @@ const WriteArticle = () => {
              className={`text-xs px-4 py-1 border rounded-full cursor-pointer ${selectedLength.text === item.text ? 'bg-blue-50 text-blue-700' : 'text-gray-500 bg-gray-200'}`} key={index}>{item.text}</span>
           ))}
         </div>
-        <button className='w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#226BFF] to-[#65ADFF] text-white px-4 py-2 mt-6 text-sm rounded-2xl cursor-pointer'>
-          <Edit className='w-5'/>
+        <button disabled={loading} className='w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#226BFF] to-[#65ADFF] text-white px-4 py-2 mt-6 text-sm rounded-2xl cursor-pointer'>
+          {loading ? <span className='size-4 my-1 rounded-full border-2 border-t-transparent animate-spin'/> :  <Edit className='w-5'/>}
           Generate Article
         </button>
       </form>
@@ -51,12 +81,21 @@ const WriteArticle = () => {
             <Edit className='size-5 text-[#4A7AFF]' />
             <h1 className='text-xl font-semibold'>Generated Article</h1>
           </div>
-          <div className='flex-1 flex justify-center items-center'>
+          {!content ? (
+            <div className='flex-1 flex justify-center items-center'>
             <div className='text-sm flex flex-col items-center gap-5 text-gray-400'>
               <Edit className='size-9' />
               <p>Enter a topic and click " Generate Article " to get started </p>
             </div>
           </div>
+          ) : (
+            <div className='mt-3 h-full overflow-y-scroll text-sm text-slate-600'>
+              <div className='reset-tw'>
+                <Markdown>{content}</Markdown>
+              </div>
+            </div>
+          )}
+          
       </div>
     </div>
   )
