@@ -7,7 +7,7 @@ export const getUserCreations = async (req: any,res: Response) : Promise<Respons
         const creations = await sql`SELECT  * FROM creations Where user_id = ${userId} ORDER BY created_at DESC`;
         return res.status(200).json({
             success: true,
-            message: creations
+            creations 
         })
     } catch (error:any) {
         return res.status(200).json({
@@ -22,7 +22,7 @@ export const getPublishCreations = async (req: any,res: Response) : Promise<Resp
         const creations = await sql`SELECT  * FROM creations Where publish = true ORDER BY created_at DESC`;
         return res.status(200).json({
             success: true,
-            message: creations
+            creations 
         })
     } catch (error:any) {
         return res.status(200).json({
