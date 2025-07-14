@@ -30,7 +30,6 @@ const RemoveBackground = () => {
             setContent(data.content);
           }else{
             toast.error(data.message)
-            console.log("Problem occured in data fetching")
           }
         } catch (error: any) {
           toast.error(error.message)

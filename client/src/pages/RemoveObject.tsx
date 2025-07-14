@@ -31,11 +31,10 @@ const RemoveObject = () => {
           formdata.append('object',object);
           const {data} = await axios.post('/api/ai/remove-image-object',formdata,{headers:{Authorization: `Bearer ${await getToken()}`}})
           if(data.success){
-            toast.success("Background Removed")
+            toast.success(`${object} Removed`)
             setContent(data.content);
           }else{
             toast.error(data.message)
-            console.log("Problem occured in data fetching")
           }
         } catch (error: any) {
           toast.error(error.message)
